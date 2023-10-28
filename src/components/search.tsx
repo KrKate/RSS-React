@@ -4,40 +4,49 @@
 //     .then((data) => console.log(data));
 // };
 
-import { useState } from 'react';
+import React, { ChangeEvent } from 'react';
 
-export function Search() {
-  const [searchInput, setSearchInput] = useState('');
+interface SearchProps {}
 
-  const handleSearch = () => {
-    const searchHistory = localStorage.getItem('searchHistory');
-    if (searchHistory) {
-      const historyArray = JSON.parse(searchHistory);
-      historyArray.push(searchInput);
-      localStorage.setItem('searchHistory', JSON.stringify(historyArray));
-    } else {
-      localStorage.setItem('searchHistory', JSON.stringify([searchInput]));
+interface SearchState {
+  searchValue: string;
+}
+
+export class Search extends React.Component<SearchProps, SearchState> {
+  constructor(props: SearchProps) {
+    super(props);
+    this.state = {
+      searchValue: '',
+    };
+  }
+
+  componentDidMount() {
+    const savedValue = localStorage.getItem('searchValue');
+    if (savedValue) {
+      this.setState({ searchValue: savedValue });
     }
-    const savedData = localStorage.getItem('searchHistory');
-    console.log(savedData);
-    setSearchInput('');
+  }
+
+  handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({ searchValue: event.target.value });
   };
 
-  return (
-    <div className="search__component">
-      <input
-        placeholder="Найдите то, что ищете"
-        type="text"
-        className="search__input"
-        value={searchInput}
-        onChange={(event) => setSearchInput(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleSearch();
-          }
-        }}
-      ></input>
-      <button onClick={handleSearch}>Search</button>
-    </div>
-  );
+  handleSearch = () => {
+    localStorage.setItem('searchValue', this.state.searchValue);
+  };
+
+  render() {
+    return (
+      <div className="search__component">
+        <input
+          placeholder="Введите имя персонажа"
+          type="text"
+          className="search__input"
+          value={this.state.searchValue}
+          onChange={this.handleInputChange}
+        ></input>
+        <button onClick={this.handleSearch}>Search</button>
+      </div>
+    );
+  }
 }

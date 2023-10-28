@@ -1,5 +1,5 @@
 import './App.css';
-import { Search } from './components/search-input';
+import { Search } from './components/search';
 //https://swapi.dev/api/people/
 
 function App() {
