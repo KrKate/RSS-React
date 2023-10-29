@@ -56,3 +56,13 @@ ul {
 li {
   list-style-type: none;
 }
+
+img {
+  height: 60vh;
+  border-radius: 1rem;
+}
+
+.error-container {
+  background-color: rgb(0, 0, 12);
+  padding: 1rem;
+}

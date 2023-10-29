@@ -1,9 +1,6 @@
 import React, { ChangeEvent } from 'react';
-import { People, SearchState } from '../models';
-interface SearchProps {
-  updateCharacters: (characters: People[]) => void;
-  onSearch: (query: string) => void;
-}
+import { People, SearchProps, SearchState } from '../models';
+
 export class Search extends React.Component<SearchProps, SearchState> {
   constructor(props: SearchProps) {
     super(props);
@@ -41,16 +38,23 @@ export class Search extends React.Component<SearchProps, SearchState> {
       .catch((error) => console.error(error));
   };
 
+  handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      this.handleSearch();
+    }
+  };
+
   render() {
     return (
       <>
         <div className="search__component">
           <input
-            placeholder="Введите имя персонажа"
+            placeholder="Enter character name"
             type="text"
             className="search__input"
             value={this.state.searchValue}
             onChange={this.handleInputChange}
+            onKeyDown={this.handleKeyPress}
           ></input>
           <button onClick={this.handleSearch}>Search</button>
         </div>

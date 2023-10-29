@@ -17,3 +17,7 @@ export interface SearchState {
 export interface CardProps {
   character: People;
 }
+
+export interface State {
+  characters: People[];
+}
