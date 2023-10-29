@@ -20,4 +20,17 @@ export interface CardProps {
 
 export interface State {
   characters: People[];
+  showError: boolean;
+}
+
+export interface SearchProps {
+  updateCharacters: (characters: People[]) => void;
+}
+
+export interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+export interface ErrorBoundaryState {
+  hasError: boolean;
 }
