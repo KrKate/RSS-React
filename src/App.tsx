@@ -31,7 +31,10 @@ class App extends React.Component<object, State> {
             <Card key={character.name} character={character} />
           ))}
           {this.state.showError && (
-            <img className="error-img" src="./src/assets/SW.jpg" />
+            <div className="error-wrapper">
+              <h1>Error!!!!</h1>
+              <img className="error-img" src="./src/assets/SW.jpg" />
+            </div>
           )}
         </div>
       </div>
