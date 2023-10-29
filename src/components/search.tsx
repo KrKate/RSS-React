@@ -1,9 +1,8 @@
 import React, { ChangeEvent } from 'react';
 import { People, SearchState } from '../models';
-import { Card } from './card';
-// import { Card } from './card';
-export interface SearchProps {
+interface SearchProps {
   updateCharacters: (characters: People[]) => void;
+  onSearch: (query: string) => void;
 }
 export class Search extends React.Component<SearchProps, SearchState> {
   constructor(props: SearchProps) {
@@ -21,6 +20,10 @@ export class Search extends React.Component<SearchProps, SearchState> {
     }
   }
 
+  componentDidUpdate() {
+    localStorage.setItem('searchValue', this.state.searchValue);
+  }
+
   handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchValue: event.target.value });
   };
@@ -31,9 +34,10 @@ export class Search extends React.Component<SearchProps, SearchState> {
 
     fetch(`https://swapi.dev/api/people/?search=${searchValue}`)
       .then((response: Response) => response.json())
-      .then((data: { results: People[] }) =>
-        this.setState({ characters: data.results })
-      )
+      .then((data: { results: People[] }) => {
+        this.setState({ characters: data.results });
+        this.props.updateCharacters(data.results);
+      })
       .catch((error) => console.error(error));
   };
 
@@ -49,11 +53,6 @@ export class Search extends React.Component<SearchProps, SearchState> {
             onChange={this.handleInputChange}
           ></input>
           <button onClick={this.handleSearch}>Search</button>
-        </div>
-        <div className="card-container">
-          {this.state.characters.map((character) => (
-            <Card character={character} key={character.name} />
-          ))}
         </div>
       </>
     );
