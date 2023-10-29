@@ -3,6 +3,7 @@ import './App.css';
 import { Search } from './components/search';
 import { Card } from './components/card';
 import { People, State } from './models';
+import SWimage from './assets/SW.jpg';
 
 class App extends React.Component<object, State> {
   state: State = {
@@ -33,7 +34,7 @@ class App extends React.Component<object, State> {
           {this.state.showError && (
             <div className="error-wrapper">
               <h1>Error!!!!</h1>
-              <img className="error-img" src="./src/assets/SW.jpg" />
+              <img className="error-img" src={SWimage} />
             </div>
           )}
         </div>
