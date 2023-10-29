@@ -9,7 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix --ignore-path .gitignore --color",
     "preview": "vite preview",
     "prepare": "husky install",
-    "format:fix": "prettier --write ./"
+    "format:fix": "prettier . --write --color"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -44,8 +44,8 @@
   },
   "lint-staged": {
     "*.(ts|tsx|js|jsx)": [
-      "eslint --fix",
-      "prettier --write ./"
+      "eslint . --fix",
+      "prettier . --write"
     ]
   }
 }
