@@ -15,6 +15,14 @@ class App extends React.Component<object, State> {
     const savedCharacters = localStorage.getItem('characters');
     if (savedCharacters) {
       this.setState({ characters: JSON.parse(savedCharacters) });
+    } else {
+      fetch('https://swapi.dev/api/people/')
+        .then((response) => response.json())
+        .then((data: { results: People[] }) => {
+          this.setState({ characters: data.results });
+          localStorage.setItem('characters', JSON.stringify(data.results));
+        })
+        .catch((error) => console.log(error));
     }
   }
 
