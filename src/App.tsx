@@ -4,22 +4,28 @@ import { Search } from './components/search';
 import { Card } from './components/card';
 import { People, State } from './models';
 import SWimage from './assets/SW.jpg';
+import Loader from './components/loader';
 
 class App extends React.Component<object, State> {
   state: State = {
     characters: [],
     showError: false,
+    isLoading: true,
   };
 
   componentDidMount() {
     const savedCharacters = localStorage.getItem('characters');
     if (savedCharacters) {
-      this.setState({ characters: JSON.parse(savedCharacters) });
+      this.setState({
+        characters: JSON.parse(savedCharacters),
+        isLoading: false,
+      });
     } else {
+      this.setState({ isLoading: true });
       fetch('https://swapi.dev/api/people/')
         .then((response) => response.json())
         .then((data: { results: People[] }) => {
-          this.setState({ characters: data.results });
+          this.setState({ characters: data.results, isLoading: false });
           localStorage.setItem('characters', JSON.stringify(data.results));
         })
         .catch((error) => console.log(error));
@@ -36,6 +42,7 @@ class App extends React.Component<object, State> {
           <Search updateCharacters={this.updateCharacters} />
         </div>
         <div className="cards-container">
+          <div>{this.state.isLoading ? <Loader /> : <></>}</div>
           {this.state.characters.map((character) => (
             <Card key={character.name} character={character} />
           ))}

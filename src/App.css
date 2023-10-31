@@ -34,6 +34,7 @@
 .search__component {
   display: flex;
   gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .character__card {
@@ -70,4 +71,10 @@ img {
 .error-wrapper {
   display: flex;
   flex-direction: column;
+}
+
+.loader {
+  color: white;
+  display: block;
+  width: 100%;
 }

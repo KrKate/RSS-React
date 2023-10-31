@@ -12,6 +12,7 @@ export interface People {
 export interface SearchState {
   searchValue: string;
   characters: People[];
+  isLoading: boolean;
 }
 
 export interface CardProps {
@@ -21,6 +22,7 @@ export interface CardProps {
 export interface State {
   characters: People[];
   showError: boolean;
+  isLoading: boolean;
 }
 
 export interface SearchProps {
