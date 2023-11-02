@@ -1,71 +1,63 @@
-import React, { ChangeEvent } from 'react';
-import { People, SearchProps, SearchState } from '../models';
+import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
+import { People, SearchProps } from '../models';
 import Loader from './loader';
 
-export class Search extends React.Component<SearchProps, SearchState> {
-  constructor(props: SearchProps) {
-    super(props);
-    this.state = {
-      searchValue: '',
-      characters: [],
-      isLoading: false,
-    };
-  }
+export const Search: React.FC<SearchProps> = ({ updateCharacters }) => {
+  const [searchValue, setSearchValue] = useState('');
+  const [, setCharacters] = useState<People[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  componentDidMount() {
+  useEffect(() => {
     const savedValue = localStorage.getItem('searchValue');
     if (savedValue) {
-      this.setState({ searchValue: savedValue });
+      setSearchValue(savedValue);
     }
-  }
+  }, []);
 
-  componentDidUpdate() {
-    localStorage.setItem('searchValue', this.state.searchValue);
-  }
+  useEffect(() => {
+    localStorage.setItem('searchValue', searchValue);
+  }, [searchValue]);
 
-  handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchValue: event.target.value });
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
   };
 
-  handleSearch = () => {
-    const { searchValue } = this.state;
+  const handleSearch = () => {
     localStorage.setItem('searchValue', searchValue);
-    this.setState({ isLoading: true });
+    setIsLoading(true);
 
     fetch(`https://swapi.dev/api/people/?search=${searchValue}`)
       .then((response: Response) => response.json())
       .then((data: { results: People[] }) => {
-        this.setState({ characters: data.results });
-        this.props.updateCharacters(data.results);
+        setCharacters(data.results);
+        updateCharacters(data.results);
       })
       .catch((error) => console.error(error))
       .finally(() => {
-        this.setState({ isLoading: false });
+        setIsLoading(false);
       });
   };
 
-  handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      this.handleSearch();
+      handleSearch();
     }
   };
 
-  render() {
-    return (
-      <>
-        <div className="search__component">
-          <input
-            placeholder="Enter character name"
-            type="text"
-            className="search__input"
-            value={this.state.searchValue}
-            onChange={this.handleInputChange}
-            onKeyDown={this.handleKeyPress}
-          ></input>
-          <button onClick={this.handleSearch}>Search</button>
-          {this.state.isLoading && <Loader />}
-        </div>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <div className="search__component">
+        <input
+          placeholder="Enter character name"
+          type="text"
+          className="search__input"
+          value={searchValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyPress}
+        ></input>
+        <button onClick={handleSearch}>Search</button>
+        {isLoading && <Loader />}
+      </div>
+    </>
+  );
+};

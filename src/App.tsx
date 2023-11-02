@@ -1,74 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Search } from './components/search';
-import { Card } from './components/card';
-import { People, State } from './models';
+import { People } from './models';
 import SWimage from './assets/SW.jpg';
 import Loader from './components/loader';
+import { Card } from './components/card';
 
-class App extends React.Component<object, State> {
-  state: State = {
-    characters: [],
-    showError: false,
-    isLoading: true,
-  };
+const App: React.FC = () => {
+  const [characters, setCharacters] = useState<People[]>([]);
+  const [showError, setShowError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  componentDidMount() {
+  useEffect(() => {
     const savedCharacters = localStorage.getItem('characters');
     if (savedCharacters) {
-      this.setState({
-        characters: JSON.parse(savedCharacters),
-        isLoading: false,
-      });
+      setCharacters(JSON.parse(savedCharacters));
+      setIsLoading(false);
     } else {
-      this.setState({ isLoading: true });
+      setIsLoading(true);
       fetch('https://swapi.dev/api/people/')
         .then((response) => response.json())
         .then((data: { results: People[] }) => {
-          this.setState({ characters: data.results, isLoading: false });
+          setCharacters(data.results);
+          setIsLoading(false);
           localStorage.setItem('characters', JSON.stringify(data.results));
         })
         .catch((error) => console.log(error));
     }
-  }
+  }, []);
 
-  render() {
-    return (
-      <div>
-        <div className="error-container">
-          <button onClick={this.throwError}>Click for Error</button>
-        </div>
-        <div className="search-container">
-          <Search updateCharacters={this.updateCharacters} />
-        </div>
-        <div className="cards-container">
-          <div>{this.state.isLoading ? <Loader /> : <></>}</div>
-          {this.state.characters.map((character) => (
-            <Card key={character.name} character={character} />
-          ))}
-          {this.state.showError && (
-            <div className="error-wrapper">
-              <h1>Error!!!!</h1>
-              <img className="error-img" src={SWimage} />
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  updateCharacters = (characters: People[]) => {
-    this.setState({ characters });
+  const updateCharacters = (characters: People[]) => {
+    setCharacters(characters);
     localStorage.setItem('characters', JSON.stringify(characters));
   };
 
-  throwError = () => {
-    this.setState({
-      characters: [],
-      showError: true,
-    });
+  const throwError = () => {
+    setCharacters([]);
+    setShowError(true);
     throw new Error('Error!!! Everything is broken');
   };
-}
+
+  return (
+    <div>
+      <div className="error-container">
+        <button onClick={throwError}>Click for Error</button>
+      </div>
+      <div className="search-container">
+        <Search updateCharacters={updateCharacters} />
+      </div>
+      <div className="cards-container">
+        <div>{isLoading ? <Loader /> : <></>}</div>
+        {characters.map((character) => (
+          <Card key={character.name} character={character} />
+        ))}
+        {showError && (
+          <div className="error-wrapper">
+            <h1>Error!!!!</h1>
+            <img className="error-img" src={SWimage} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default App;
