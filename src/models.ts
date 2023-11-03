@@ -9,6 +9,18 @@ export interface People {
   gender: string;
 }
 
+// export interface People {
+//   id: number;
+//   title: string;
+//   description: string;
+//   price: number;
+//   discountPercentage: number;
+//   rating: number;
+//   stock: number;
+//   brand: string;
+//   category: string;
+// }
+
 export interface SearchState {
   searchValue: string;
   characters: People[];

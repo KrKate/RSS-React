@@ -18,12 +18,26 @@ const App: React.FC = () => {
       setIsLoading(false);
     } else {
       setIsLoading(true);
-      fetch('https://swapi.dev/api/people/')
-        .then((response) => response.json())
-        .then((data: { results: People[] }) => {
-          setCharacters(data.results);
+      Promise.all([
+        fetch('https://swapi.dev/api/people/?page=1').then((response) =>
+          response.json()
+        ),
+        fetch('https://swapi.dev/api/people/?page=2').then((response) =>
+          response.json()
+        ),
+        fetch('https://swapi.dev/api/people/?page=3').then((response) =>
+          response.json()
+        ),
+      ])
+        .then(([data1, data2]) => {
+          const allCharacters = [
+            ...data1.results,
+            ...data2.results,
+            ...data2.results,
+          ];
+          setCharacters(allCharacters);
           setIsLoading(false);
-          localStorage.setItem('characters', JSON.stringify(data.results));
+          localStorage.setItem('characters', JSON.stringify(allCharacters));
         })
         .catch((error) => console.log(error));
     }
@@ -49,10 +63,13 @@ const App: React.FC = () => {
         <Search updateCharacters={updateCharacters} />
       </div>
       <div className="cards-container">
-        <div>{isLoading ? <Loader /> : <></>}</div>
-        {characters.map((character) => (
-          <Card key={character.name} character={character} />
-        ))}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          characters.map((character) => (
+            <Card key={character.name} character={character} />
+          ))
+        )}
         {showError && (
           <div className="error-wrapper">
             <h1>Error!!!!</h1>
