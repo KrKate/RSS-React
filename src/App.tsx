@@ -29,11 +29,11 @@ const App: React.FC = () => {
           response.json()
         ),
       ])
-        .then(([data1, data2]) => {
+        .then(([data1, data2, data3]) => {
           const allCharacters = [
             ...data1.results,
             ...data2.results,
-            ...data2.results,
+            ...data3.results,
           ];
           setCharacters(allCharacters);
           setIsLoading(false);

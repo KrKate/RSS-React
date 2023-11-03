@@ -30,7 +30,7 @@ export const Search: React.FC<SearchProps> = ({ updateCharacters }) => {
       .then((response: Response) => response.json())
       .then((data: { results: People[] }) => {
         setCharacters(data.results);
-        updateCharacters(data.results);
+        updateCharacters(data.results, searchValue);
       })
       .catch((error) => console.error(error))
       .finally(() => {
