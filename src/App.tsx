@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [showError, setShowError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [cardsPerPage] = useState(10);
+  const [cardsPerPage, setCardsPerPage] = useState(10);
 
   useEffect(() => {
     const savedCharacters = localStorage.getItem('characters');
@@ -50,6 +50,14 @@ const App: React.FC = () => {
     setCharacters(characters);
     setCurrentPage(1);
     localStorage.setItem('characters', JSON.stringify(characters));
+  };
+
+  const handleCardsPerPageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedCardsPerPage = parseInt(event.target.value);
+    setCardsPerPage(selectedCardsPerPage);
+    setCurrentPage(1);
   };
 
   const throwError = () => {
@@ -91,6 +99,13 @@ const App: React.FC = () => {
         totalCards={characters.length}
         paginate={paginate}
       />
+      <select value={cardsPerPage} onChange={handleCardsPerPageChange}>
+        <option value={5}>5</option>
+        <option value={10}>10</option>
+        <option value={15}>15</option>
+        <option value={20}>20</option>
+        <option value={30}>30</option>
+      </select>
     </div>
   );
 };
