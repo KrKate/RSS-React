@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Search } from './components/search';
 import { People } from './models';
-import SWimage from './assets/SW.jpg';
 import Loader from './components/loader';
 import { Card } from './components/card';
 import Pagination from './components/pagination';
+import { Select } from './components/select';
+import { ErrorComponent } from './components/error';
 
 const App: React.FC = () => {
   const [characters, setCharacters] = useState<People[]>([]);
@@ -56,8 +57,8 @@ const App: React.FC = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedCardsPerPage = parseInt(event.target.value);
-    setCardsPerPage(selectedCardsPerPage);
     setCurrentPage(1);
+    setCardsPerPage(selectedCardsPerPage);
   };
 
   const throwError = () => {
@@ -87,25 +88,16 @@ const App: React.FC = () => {
             <Card key={character.name} character={character} />
           ))
         )}
-        {showError && (
-          <div className="error-wrapper">
-            <h1>Error!!!!</h1>
-            <img className="error-img" src={SWimage} />
-          </div>
-        )}
+        {showError && <ErrorComponent />}
       </div>
-      <Pagination
-        cardsPerPage={cardsPerPage}
-        totalCards={characters.length}
-        paginate={paginate}
-      />
-      <select value={cardsPerPage} onChange={handleCardsPerPageChange}>
-        <option value={5}>5</option>
-        <option value={10}>10</option>
-        <option value={15}>15</option>
-        <option value={20}>20</option>
-        <option value={30}>30</option>
-      </select>
+      <div className="pagination-container">
+        <Pagination
+          cardsPerPage={cardsPerPage}
+          totalCards={characters.length}
+          paginate={paginate}
+        />
+        <Select value={cardsPerPage} onChange={handleCardsPerPageChange} />
+      </div>
     </div>
   );
 };

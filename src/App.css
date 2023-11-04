@@ -97,3 +97,11 @@ img {
 .pagination li:hover {
   background-color: #c7c9efaa;
 }
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding-bottom: 15px;
+
+}
