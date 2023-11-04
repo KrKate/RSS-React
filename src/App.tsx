@@ -5,11 +5,14 @@ import { People } from './models';
 import SWimage from './assets/SW.jpg';
 import Loader from './components/loader';
 import { Card } from './components/card';
+import Pagination from './components/pagination';
 
 const App: React.FC = () => {
   const [characters, setCharacters] = useState<People[]>([]);
   const [showError, setShowError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage] = useState(10);
 
   useEffect(() => {
     const savedCharacters = localStorage.getItem('characters');
@@ -45,6 +48,7 @@ const App: React.FC = () => {
 
   const updateCharacters = (characters: People[]) => {
     setCharacters(characters);
+    setCurrentPage(1);
     localStorage.setItem('characters', JSON.stringify(characters));
   };
 
@@ -53,6 +57,11 @@ const App: React.FC = () => {
     setShowError(true);
     throw new Error('Error!!! Everything is broken');
   };
+
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = characters.slice(indexOfFirstCard, indexOfLastCard);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div>
@@ -66,7 +75,7 @@ const App: React.FC = () => {
         {isLoading ? (
           <Loader />
         ) : (
-          characters.map((character) => (
+          currentCards.map((character) => (
             <Card key={character.name} character={character} />
           ))
         )}
@@ -77,6 +86,11 @@ const App: React.FC = () => {
           </div>
         )}
       </div>
+      <Pagination
+        cardsPerPage={cardsPerPage}
+        totalCards={characters.length}
+        paginate={paginate}
+      />
     </div>
   );
 };
