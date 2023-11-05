@@ -15,7 +15,7 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(10);
-  const [asideShow, setAsideShow] = useState(true);
+  const [asideShow, setAsideShow] = useState(false);
 
   useEffect(() => {
     const savedCharacters = localStorage.getItem('characters');
