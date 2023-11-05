@@ -14,7 +14,7 @@ export const Aside: React.FC<AsideProps> = ({
         <button className="close-button" onClick={closeAside}>
           Close
         </button>
-        <h1>Hey!</h1>
+        <h1>More information about character</h1>
       </div>
     </>
   );
