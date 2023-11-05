@@ -1,10 +1,14 @@
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CardProps } from '../models';
 
-export const Card: React.FC<CardProps & { openAside: () => void }> = ({
-  character,
-  openAside,
-}) => {
+export const Card: React.FC<
+  CardProps & { openAside: () => void; closeAside: () => void }
+> = ({ character, openAside }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleClick = () => {
+    navigate(`${location.search}/card/${character.name}`);
     openAside();
   };
 
