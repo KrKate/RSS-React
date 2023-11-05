@@ -26,7 +26,7 @@ export interface State {
 }
 
 export interface SearchProps {
-  updateCharacters: (characters: People[]) => void;
+  updateCharacters: (characters: People[], searchValue: string) => void;
 }
 
 export interface ErrorBoundaryProps {
