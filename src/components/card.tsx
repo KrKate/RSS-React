@@ -1,8 +1,15 @@
 import { CardProps } from '../models';
 
-export const Card: React.FC<CardProps> = ({ character }) => {
+export const Card: React.FC<CardProps & { openAside: () => void }> = ({
+  character,
+  openAside,
+}) => {
+  const handleClick = () => {
+    openAside();
+  };
+
   return (
-    <div className="character__card">
+    <div className="character__card" onClick={handleClick}>
       <h2>{character.name}</h2>
       <ul>
         <li>Height: {character.height}</li>

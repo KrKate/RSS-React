@@ -7,6 +7,7 @@ import { Card } from './components/card';
 import Pagination from './components/pagination';
 import { Select } from './components/select';
 import { ErrorComponent } from './components/error';
+import { Aside } from './components/aside';
 
 const App: React.FC = () => {
   const [characters, setCharacters] = useState<People[]>([]);
@@ -14,6 +15,7 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(10);
+  const [asideShow, setAsideShow] = useState(true);
 
   useEffect(() => {
     const savedCharacters = localStorage.getItem('characters');
@@ -72,32 +74,58 @@ const App: React.FC = () => {
   const currentCards = characters.slice(indexOfFirstCard, indexOfLastCard);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+  const closeAside = () => {
+    setAsideShow(false);
+  };
+
+  const openAside = () => {
+    setAsideShow(true);
+  };
+  const handleClickOutside = (event: React.MouseEvent) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.modal-card')) {
+      setAsideShow(false);
+    }
+  };
+
   return (
-    <div>
-      <div className="error-container">
-        <button onClick={throwError}>Click for Error</button>
+    <div className="app-container">
+      <div className="main-container">
+        <div className="error-container">
+          <button onClick={throwError}>Click for Error</button>
+        </div>
+        <div className="search-container">
+          <Search updateCharacters={updateCharacters} />
+        </div>
+        <div className="cards-container">
+          {isLoading ? (
+            <Loader />
+          ) : (
+            currentCards.map((character) => (
+              <Card
+                key={character.name}
+                character={character}
+                openAside={openAside}
+              />
+            ))
+          )}
+          {showError && <ErrorComponent />}
+        </div>
+        <div className="pagination-container">
+          <Pagination
+            cardsPerPage={cardsPerPage}
+            totalCards={characters.length}
+            paginate={paginate}
+          />
+          <Select value={cardsPerPage} onChange={handleCardsPerPageChange} />
+        </div>
       </div>
-      <div className="search-container">
-        <Search updateCharacters={updateCharacters} />
-      </div>
-      <div className="cards-container">
-        {isLoading ? (
-          <Loader />
-        ) : (
-          currentCards.map((character) => (
-            <Card key={character.name} character={character} />
-          ))
-        )}
-        {showError && <ErrorComponent />}
-      </div>
-      <div className="pagination-container">
-        <Pagination
-          cardsPerPage={cardsPerPage}
-          totalCards={characters.length}
-          paginate={paginate}
+      {asideShow && (
+        <Aside
+          closeAside={closeAside}
+          handleClickOutside={handleClickOutside}
         />
-        <Select value={cardsPerPage} onChange={handleCardsPerPageChange} />
-      </div>
+      )}
     </div>
   );
 };

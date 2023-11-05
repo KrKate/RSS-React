@@ -46,6 +46,7 @@
   border-radius: 20px;
   border: 1px solid #0912beaa;
   gap: 1rem;
+  cursor: pointer;
 }
 
 ul {
@@ -103,4 +104,30 @@ img {
   justify-content: center;
   gap: 2rem;
   padding-bottom: 15px;
+}
+
+.aside {
+  background-color: rgba(0, 0, 0, 0.381);
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.modal-card {
+  width: 500px;
+  padding: 5px;
+  background-color: aliceblue;
+  top: 20px;
+  z-index: 10;
+  height: 100%;
+  width: 45%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.app-container {
+  display: flex;
 }
