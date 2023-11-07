@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { People, SearchProps, SearchState } from '../models';
 import Loader from './loader';
+import { SWAPI } from '../constants';
 
 export class Search extends React.Component<SearchProps, SearchState> {
   constructor(props: SearchProps) {
@@ -32,7 +33,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
     localStorage.setItem('searchValue', searchValue);
     this.setState({ isLoading: true });
 
-    fetch(`https://swapi.dev/api/people/?search=${searchValue}`)
+    fetch(`${SWAPI.url}${SWAPI.search}${searchValue}`)
       .then((response: Response) => response.json())
       .then((data: { results: People[] }) => {
         this.setState({ characters: data.results });
@@ -52,7 +53,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
 
   render() {
     return (
-      <>
+      <div className="search-container">
         <div className="search__component">
           <input
             placeholder="Enter character name"
@@ -65,7 +66,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
           <button onClick={this.handleSearch}>Search</button>
           {this.state.isLoading && <Loader />}
         </div>
-      </>
+      </div>
     );
   }
 }
