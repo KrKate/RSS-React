@@ -1,6 +1,7 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 #root {
@@ -80,11 +81,34 @@ img {
   width: 100%;
 }
 
-.aside {
+.app-container {
+  display: flex;
+}
+
+.aside-dark-wrapper {
   background-color: rgba(0, 0, 0, 0.381);
   position: fixed;
   right: 0;
   left: 0;
   top: 0;
   bottom: 0;
+}
+
+.close-button {
+  background-color: rgb(172, 54, 235);
+  color: white;
+  width: 80%;
+}
+
+.modal-card {
+  display: flex;
+  padding: 2rem;
+  position: relative;
+  z-index: 10;
+  background-color: rgb(222, 215, 250);
+  height: 100%;
+  width: 400px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }

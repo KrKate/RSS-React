@@ -4,6 +4,7 @@ import { Search } from './components/search';
 import { People, State } from './models';
 import CardsContainer from './components/cardsContainer';
 import { getPeople } from './api/getPeople';
+import Aside from './components/aside';
 
 class App extends React.Component<object, State> {
   state: State = {
@@ -41,16 +42,19 @@ class App extends React.Component<object, State> {
 
   render() {
     return (
-      <div>
-        <div className="error-container">
-          <button onClick={this.throwError}>Click for Error</button>
+      <div className="app-container">
+        <div className="main-container">
+          <div className="error-container">
+            <button onClick={this.throwError}>Click for Error</button>
+          </div>
+          <Search updateCharacters={this.updateCharacters} />
+          <CardsContainer
+            characters={this.state.characters}
+            isLoading={this.state.isLoading}
+            showError={this.state.showError}
+          />
         </div>
-        <Search updateCharacters={this.updateCharacters} />
-        <CardsContainer
-          characters={this.state.characters}
-          isLoading={this.state.isLoading}
-          showError={this.state.showError}
-        />
+        <Aside />
       </div>
     );
   }
