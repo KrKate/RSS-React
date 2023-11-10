@@ -45,7 +45,7 @@ export const Search: React.FC<SearchProps> = ({ updateCharacters }) => {
   };
 
   return (
-    <>
+    <div className="search-container">
       <div className="search__component">
         <input
           placeholder="Enter character name"
@@ -58,6 +58,6 @@ export const Search: React.FC<SearchProps> = ({ updateCharacters }) => {
         <button onClick={handleSearch}>Search</button>
         {isLoading && <Loader />}
       </div>
-    </>
+    </div>
   );
 };

@@ -16,6 +16,9 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(10);
   const [asideShow, setAsideShow] = useState(false);
+  const [selectedCharacter, setSelectedCharacter] = useState<People | null>(
+    null
+  );
 
   useEffect(() => {
     const savedCharacters = localStorage.getItem('characters');
@@ -78,13 +81,11 @@ const App: React.FC = () => {
     setAsideShow(false);
   };
 
-  const openAside = () => {
-    setAsideShow(true);
-  };
-  const handleClickOutside = (event: React.MouseEvent) => {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.modal-card')) {
-      setAsideShow(false);
+  const openAside = (characterKey: string) => {
+    const selected = characters.find((char) => char.name === characterKey);
+    if (selected) {
+      setSelectedCharacter(selected);
+      setAsideShow(true);
     }
   };
 
@@ -94,18 +95,16 @@ const App: React.FC = () => {
         <div className="error-container">
           <button onClick={throwError}>Click for Error</button>
         </div>
-        <div className="search-container">
-          <Search updateCharacters={updateCharacters} />
-        </div>
+        <Search updateCharacters={updateCharacters} />
         <div className="cards-container">
           {isLoading ? (
             <Loader />
           ) : (
             currentCards.map((character) => (
               <Card
-                key={character.name}
                 character={character}
                 openAside={openAside}
+                key={character.name}
               />
             ))
           )}
@@ -120,11 +119,8 @@ const App: React.FC = () => {
           <Select value={cardsPerPage} onChange={handleCardsPerPageChange} />
         </div>
       </div>
-      {asideShow && (
-        <Aside
-          closeAside={closeAside}
-          handleClickOutside={handleClickOutside}
-        />
+      {asideShow && selectedCharacter && (
+        <Aside closeAside={closeAside} selectedCharacter={selectedCharacter} />
       )}
     </div>
   );
