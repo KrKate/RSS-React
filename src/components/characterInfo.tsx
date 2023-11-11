@@ -1,24 +1,26 @@
+import React from 'react';
 import { People } from '../models';
 
-export const CharacterInfo: React.FC<{
+interface CharacterDetailsProps {
   character: People;
-  asideShow: boolean;
-  selectedCharacter: People;
-  key: string;
-}> = (props) => {
-  const { selectedCharacter } = props;
+}
+
+export const CharacterInfo: React.FC<CharacterDetailsProps> = ({
+  character,
+}) => {
+  if (!character) {
+    return <div className="dark-loader">Loading...</div>;
+  }
   return (
-    <>
-      <h2>{selectedCharacter.name}</h2>
-      <ul>
-        <li>Height: {selectedCharacter.height}</li>
-        <li>Mass: {selectedCharacter.mass}</li>
-        <li>Hair color: {selectedCharacter.hair_color}</li>
-        <li>Skin color: {selectedCharacter.skin_color}</li>
-        <li>Eye color: {selectedCharacter.eye_color}</li>
-        <li>Birth year: {selectedCharacter.birth_year}</li>
-        <li>Gender: {selectedCharacter.gender}</li>
-      </ul>
-    </>
+    <div>
+      <h2>{character.name}</h2>
+      <p>Height: {character.height}</p>
+      <p>Mass: {character.mass}</p>
+      <p>Hair Color: {character.hair_color}</p>
+      <p>Skin Color: {character.skin_color}</p>
+      <p>Eye Color: {character.eye_color}</p>
+      <p>Birth Year: {character.birth_year}</p>
+      <p>Gender: {character.gender}</p>
+    </div>
   );
 };

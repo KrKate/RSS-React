@@ -4,7 +4,7 @@ import { People } from '../models';
 
 export interface AsideProps {
   closeAside: () => void;
-  seleсtedCharacter: People;
+  selectedCharacter: People;
 }
 
 export const Aside: React.FC<AsideProps> = ({
@@ -29,12 +29,7 @@ export const Aside: React.FC<AsideProps> = ({
         <button className="close-button" onClick={handleCloseClick}>
           Close
         </button>
-        <CharacterInfo
-          character={selectedCharacter}
-          asideShow={true}
-          selectedCharacter={selectedCharacter}
-          key={''}
-        />
+        <CharacterInfo character={selectedCharacter} key={''} />
       </div>
     </>
   );
