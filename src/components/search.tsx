@@ -1,8 +1,10 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { People, SearchProps } from '../models';
 import Loader from './loader';
+import { useUserContext } from './Contexts/AppContext';
 
-export const Search: React.FC<SearchProps> = ({ updateCharacters }) => {
+export const Search: React.FC<SearchProps> = () => {
+  const { updateCharacters } = useUserContext();
   const [searchValue, setSearchValue] = useState('');
   const [, setCharacters] = useState<People[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +32,7 @@ export const Search: React.FC<SearchProps> = ({ updateCharacters }) => {
       .then((response: Response) => response.json())
       .then((data: { results: People[] }) => {
         setCharacters(data.results);
-        updateCharacters(data.results, searchValue);
+        updateCharacters(data.results);
       })
       .catch((error) => console.error(error))
       .finally(() => {

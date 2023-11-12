@@ -100,7 +100,6 @@ img {
   transition: all 6ms;
 }
 
-
 .pagination-container {
   display: flex;
   flex-wrap: wrap;
@@ -150,7 +149,6 @@ img {
   width: 60%;
 }
 
-
 .dark-loader {
-  color:rgb(58, 5, 144);
+  color: rgb(58, 5, 144);
 }

@@ -7,9 +7,9 @@ import { Card } from './components/card';
 import { ErrorComponent } from './components/error';
 import { Aside } from './components/aside';
 import { Pagination } from './components/pagination';
+import { UserContext } from './components/Contexts/AppContext';
 
 const App: React.FC = () => {
-  const [characters, setCharacters] = useState<People[]>([]);
   const [showError, setShowError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +18,8 @@ const App: React.FC = () => {
     null
   );
   const [totalPages, setTotalPages] = useState(1);
+
+  const [characters, setCharacters] = useState<People[]>([]);
 
   useEffect(() => {
     const savedCharacters = localStorage.getItem('characters');
@@ -66,40 +68,45 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app-container">
-      <div className="main-container">
-        <div className="error-container">
-          <button onClick={throwError}>Click for Error</button>
-        </div>
-        <Search updateCharacters={updateCharacters} />
-        <div className="cards-container">
-          {isLoading ? (
-            <Loader />
-          ) : (
-            characters.map((character) => (
-              <Card
-                character={character}
-                openAside={openAside}
-                key={character.name}
-              />
-            ))
-          )}
-          {showError && <ErrorComponent />}
-        </div>
-        {!isLoading && (
-          <div className="pagination-container">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+    <UserContext.Provider value={{ characters, updateCharacters }}>
+      <div className="app-container">
+        <div className="main-container">
+          <div className="error-container">
+            <button onClick={throwError}>Click for Error</button>
           </div>
+          <Search updateCharacters={updateCharacters} />
+          <div className="cards-container">
+            {isLoading ? (
+              <Loader />
+            ) : (
+              characters.map((character) => (
+                <Card
+                  character={character}
+                  openAside={openAside}
+                  key={character.name}
+                />
+              ))
+            )}
+            {showError && <ErrorComponent />}
+          </div>
+          {!isLoading && (
+            <div className="pagination-container">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
+        </div>
+        {asideShow && selectedCharacter && (
+          <Aside
+            closeAside={closeAside}
+            selectedCharacter={selectedCharacter}
+          />
         )}
       </div>
-      {asideShow && selectedCharacter && (
-        <Aside closeAside={closeAside} selectedCharacter={selectedCharacter} />
-      )}
-    </div>
+    </UserContext.Provider>
   );
 };
 
