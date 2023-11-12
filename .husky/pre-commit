@@ -9,5 +9,6 @@ if [ "$branch" = "main" ]; then
 fi
 
 npx lint-staged
+# npx test
 
 

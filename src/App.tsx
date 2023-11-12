@@ -7,7 +7,7 @@ import { Card } from './components/card';
 import { ErrorComponent } from './components/error';
 import { Aside } from './components/aside';
 import { Pagination } from './components/pagination';
-import { UserContext } from './components/Contexts/AppContext';
+import { AppContext } from './components/Contexts/AppContext';
 
 const App: React.FC = () => {
   const [showError, setShowError] = useState(false);
@@ -68,7 +68,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <UserContext.Provider value={{ characters, updateCharacters }}>
+    <AppContext.Provider value={{ characters, updateCharacters }}>
       <div className="app-container">
         <div className="main-container">
           <div className="error-container">
@@ -106,7 +106,7 @@ const App: React.FC = () => {
           />
         )}
       </div>
-    </UserContext.Provider>
+    </AppContext.Provider>
   );
 };
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { People, SearchProps } from '../models';
 import Loader from './loader';
-import { useUserContext } from './Contexts/AppContext';
+import { useAppContext } from './Contexts/AppContext';
 
 export const Search: React.FC<SearchProps> = () => {
-  const { updateCharacters } = useUserContext();
+  const { updateCharacters } = useAppContext();
   const [searchValue, setSearchValue] = useState('');
   const [, setCharacters] = useState<People[]>([]);
   const [isLoading, setIsLoading] = useState(false);
