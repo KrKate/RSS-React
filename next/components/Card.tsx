@@ -1,5 +1,5 @@
-import Link from "next/link";
-import styles from "../styles/Card.module.css";
+import Link from 'next/link';
+import styles from '../styles/Card.module.css';
 
 type CardProps = {
   id: number;

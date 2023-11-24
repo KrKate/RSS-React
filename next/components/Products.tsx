@@ -1,5 +1,5 @@
-import Card from "./Card";
-import styles from "../styles/Products.module.css";
+import Card from './Card';
+import styles from '../styles/Products.module.css';
 
 export type Product = {
   id: number;
