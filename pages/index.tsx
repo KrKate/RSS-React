@@ -13,7 +13,11 @@ const Home = ({ products }: ProductsProps) => {
   return (
     <div className={styles.wrapper}>
       <Header queryCallback={handleQuery}></Header>
-      <Products products={products}></Products>
+      {products.length > 0 ? (
+        <Products products={products}></Products>
+      ) : (
+        <div className={styles.noProduct}>No such product found</div>
+      )}
       <div>
         <button>Previous</button>
         <span>currentPage</span>

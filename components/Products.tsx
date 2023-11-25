@@ -6,8 +6,8 @@ const Products = ({ products }: ProductsProps) => {
   return (
     <div className={styles.products_container}>
       {products &&
-        products.map(({ id, title, images }) => (
-          <Card key={id} id={id} title={title} images={images} />
+        products.map(({ id, title, images, price }) => (
+          <Card key={id} id={id} title={title} images={images} price={price} />
         ))}
     </div>
   );
