@@ -6,29 +6,48 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 import { Pagination } from '@/components/Pagination';
 import Select from '@/components/Select';
+import Aside from '@/components/Aside';
 
 const Home = ({
   products,
   totalPages,
 }: ProductsProps & { totalPages: number }) => {
   const [, setQuery] = useState('');
+  const [asideVisible, setAsideVisible] = useState(false);
+
   const handleQuery = (query: string) => {
     setQuery(query);
   };
+
+  const handleCloseAside = () => {
+    setAsideVisible(false);
+  };
+
+  const handleOpenAside = () => {
+    setAsideVisible(true);
+  };
+
   return (
-    <div className={styles.wrapper}>
-      <button>ErrorBoudary</button>
-      <Header queryCallback={handleQuery}></Header>
-      <Select></Select>
-      <Pagination totalPages={totalPages}></Pagination>
-      {products.length > 0 ? (
-        <Products products={products}></Products>
-      ) : (
-        <div className={styles.noProduct}>No such product found</div>
-      )}
+    <div className={styles.app_container}>
+      <div className={styles.wrapper}>
+        <button>ErrorBoudary</button>
+        <Header queryCallback={handleQuery}></Header>
+        <Select></Select>
+        <Pagination totalPages={totalPages}></Pagination>
+        {products.length > 0 ? (
+          <Products
+            products={products}
+            handleOpenAside={handleOpenAside}
+          ></Products>
+        ) : (
+          <div className={styles.noProduct}>No such product found</div>
+        )}
+      </div>
+      {asideVisible && <Aside onClose={handleCloseAside} />}
     </div>
   );
 };
+
 export default Home;
 
 export const getServerSideProps: GetServerSideProps<

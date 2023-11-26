@@ -29,3 +29,7 @@ export type CardProps = {
   images: string[];
   price: number;
 };
+
+export type HeaderProps = {
+  queryCallback: (query: string) => void;
+};
