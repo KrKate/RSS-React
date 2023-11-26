@@ -4,33 +4,34 @@ import Products from '@/components/Products';
 import { ProductsProps } from '../types';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
+import { Pagination } from '@/components/Pagination';
 
-const Home = ({ products }: ProductsProps) => {
+const Home = ({
+  products,
+  totalPages,
+}: ProductsProps & { totalPages: number }) => {
   const [, setQuery] = useState('');
   const handleQuery = (query: string) => {
     setQuery(query);
   };
   return (
     <div className={styles.wrapper}>
+      <button>ErrorBoudary</button>
       <Header queryCallback={handleQuery}></Header>
+      <Pagination totalPages={totalPages}></Pagination>
       {products.length > 0 ? (
         <Products products={products}></Products>
       ) : (
         <div className={styles.noProduct}>No such product found</div>
       )}
-      <div>
-        <button>Previous</button>
-        <span>currentPage</span>
-        <button>Next</button>
-      </div>
     </div>
   );
 };
 export default Home;
 
-export const getServerSideProps: GetServerSideProps<ProductsProps> = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps<
+  ProductsProps & { totalPages: number }
+> = async (context: GetServerSidePropsContext) => {
   const baseURL = 'https://dummyjson.com/products';
   const total = 100;
   const currentPage = Number(context.query.page) || 1;
@@ -47,6 +48,7 @@ export const getServerSideProps: GetServerSideProps<ProductsProps> = async (
   return {
     props: {
       products,
+      totalPages: Math.ceil(total / limit),
     },
   };
 };
