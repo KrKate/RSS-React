@@ -5,6 +5,7 @@ import { ProductsProps } from '../types';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 import { Pagination } from '@/components/Pagination';
+import Select from '@/components/Select';
 
 const Home = ({
   products,
@@ -18,6 +19,7 @@ const Home = ({
     <div className={styles.wrapper}>
       <button>ErrorBoudary</button>
       <Header queryCallback={handleQuery}></Header>
+      <Select></Select>
       <Pagination totalPages={totalPages}></Pagination>
       {products.length > 0 ? (
         <Products products={products}></Products>
@@ -33,9 +35,9 @@ export const getServerSideProps: GetServerSideProps<
   ProductsProps & { totalPages: number }
 > = async (context: GetServerSidePropsContext) => {
   const baseURL = 'https://dummyjson.com/products';
-  const total = 100;
+  const total = Number(context.query.total) || 100;
   const currentPage = Number(context.query.page) || 1;
-  const limit = 20;
+  const limit = Number(context.query.limit) || 10;
   const skip = (currentPage - 1) * limit;
   let url = `${baseURL}?total=${total}&skip=${skip}&limit=${limit}`;
 

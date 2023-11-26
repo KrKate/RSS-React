@@ -9,8 +9,7 @@ type HeaderProps = {
 const Header = ({ queryCallback }: HeaderProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
-
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>(
     searchParams.get('query')?.toString() || ''
   );
@@ -23,7 +22,7 @@ const Header = ({ queryCallback }: HeaderProps) => {
       params.delete('query');
     }
     queryCallback(searchTerm);
-    replace(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   return (
