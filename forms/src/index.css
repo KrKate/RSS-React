@@ -35,6 +35,13 @@ h1 {
   line-height: 1.1;
 }
 
+h5 {
+  margin: 2px;
+  padding: 0;
+  display: flex;
+  align-self: flex-start;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
