@@ -55,13 +55,11 @@ input {
   align-self: center;
 }
 
-.label,
-section > label {
+label {
   line-height: 2;
   text-align: left;
   display: block;
-  margin-bottom: 13px;
-  margin-top: 20px;
+  width: 30rem;
   color: white;
   font-size: 14px;
   font-weight: 200;
@@ -168,5 +166,23 @@ h5 {
 
 .error {
   color: red;
-  height: 1.7rem;
+  height: 1.9rem;
+  width: 500px;
+}
+
+
+form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+
+.terms {
+  display: flex;
+}
+
+input#terms {
+  width: 1.5rem;
 }

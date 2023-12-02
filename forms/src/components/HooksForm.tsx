@@ -2,8 +2,9 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FormData } from '../types';
 
-const schema = yup
+export const schema = yup
   .object()
   .shape({
     name: yup
@@ -46,21 +47,10 @@ const schema = yup
   })
   .required();
 
-type FormData = {
-  name: string;
-  age: number;
-  email: string;
-  password1: string;
-  password2: string;
-  gender: string;
-  terms?: boolean;
-  image?: FileList;
-};
-
 export const HooksForm = () => {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
     handleSubmit,
   } = useForm({
     mode: 'all',
@@ -127,13 +117,13 @@ export const HooksForm = () => {
           </div>
         </label>
 
-        <label htmlFor="terms">
+        <label htmlFor="terms" className="terms">
           <input
             type="checkbox"
             id="terms"
             {...register('terms', { value: false })}
           />
-          <span>Accept Terms and Conditions</span>
+          <div className="accept">Accept Terms and Conditions</div>
         </label>
         <div className="error">
           {errors.terms && <p>{errors.terms.message}</p>}
@@ -147,7 +137,7 @@ export const HooksForm = () => {
           </div>
         </label>
 
-        <input type="submit" disabled={Object.keys(errors).length !== 0} />
+        <input type="submit" disabled={!isValid || !isDirty} />
       </form>
     </>
   );
