@@ -29,27 +29,33 @@ const schema = yup
       .oneOf([true], 'You must accept the terms and conditions'),
     image: yup
       .mixed<FileList>()
+      .test('fileSize', 'Only documents up to 2MB are permitted.', (value) => {
+        return value && value[0] && value[0].size <= 2000000;
+      })
       .test(
-        'fileSize',
-        'Only documents up to 2MB are permitted.',
-        (files) =>
-          !files ||
-          files.length === 0 ||
-          Array.from(files).every((file) => file.size <= 2000000)
+        'type',
+        'Only the following formats are accepted: .png, .jpeg',
+        (value) => {
+          return (
+            value &&
+            value[0] &&
+            (value[0].type === 'image/jpeg' || value[0].type === 'image/png')
+          );
+        }
       ),
   })
   .required();
 
-// type FormData = {
-//   name: string;
-//   age: number;
-//   email: string;
-//   password1: string;
-//   password2: string;
-//   gender: string;
-//   terms?: boolean;
-//   image?: FileList;
-// }
+type FormData = {
+  name: string;
+  age: number;
+  email: string;
+  password1: string;
+  password2: string;
+  gender: string;
+  terms?: boolean;
+  image?: FileList;
+};
 
 export const HooksForm = () => {
   const {
@@ -61,44 +67,52 @@ export const HooksForm = () => {
     resolver: yupResolver(schema),
   });
 
-  // const onSubmit = (data: FormData) => {
-  //   console.log(data);
-  // };
+  const onSubmit = (data: FormData) => {
+    console.log(JSON.stringify(data));
+  };
 
   return (
     <>
       <Link to="/">Main</Link>
       <h2>React Hook Form</h2>
-      <form onSubmit={handleSubmit((d) => console.log(d))}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="name">
           <h5>First Name:</h5>
           <input type="text" id="name" {...register('name')} />
         </label>
-        {errors.name && <p>{errors.name.message}</p>}
+        <div className="error">
+          {errors.name && <p className="error">{errors.name.message}</p>}
+        </div>
 
         <label htmlFor="age">
           <h5>Age:</h5>
           <input type="number" id="age" {...register('age')} />
         </label>
-        {errors.age && <p>{errors.age.message}</p>}
+        <div className="error">{errors.age && <p>{errors.age.message}</p>}</div>
 
         <label htmlFor="email">
           <h5>Mail:</h5>
           <input type="text" {...register('email')} />
         </label>
-        {errors.email && <p>{errors.email.message}</p>}
+        <div className="error">
+          {errors.email && <p>{errors.email.message}</p>}
+        </div>
 
         <label htmlFor="password1">
           <h5>Password:</h5>
           <input type="password" id="password1" {...register('password1')} />
         </label>
-        {errors.password1 && <p>{errors.password1.message}</p>}
+        <div className="error">
+          {errors.password1 && <p>{errors.password1.message}</p>}
+        </div>
 
         <label htmlFor="password2">
           <h5>Confirm Password:</h5>
           <input type="password" id="password2" {...register('password2')} />
         </label>
-        {errors.password2 && <p>{errors.password2.message}</p>}
+        <div className="error">
+          {errors.password2 && <p>{errors.password2.message}</p>}
+        </div>
 
         <label htmlFor="gender">
           <h5>Gender:</h5>
@@ -108,8 +122,11 @@ export const HooksForm = () => {
             <option value="female">Female</option>
             <option value="other">Other</option>
           </select>
-          {errors.gender && <p>{errors.gender.message}</p>}
+          <div className="error">
+            {errors.gender && <p>{errors.gender.message}</p>}
+          </div>
         </label>
+
         <label htmlFor="terms">
           <input
             type="checkbox"
@@ -118,15 +135,19 @@ export const HooksForm = () => {
           />
           <span>Accept Terms and Conditions</span>
         </label>
-        {errors.terms && <p>{errors.terms.message}</p>}
+        <div className="error">
+          {errors.terms && <p>{errors.terms.message}</p>}
+        </div>
 
         <label htmlFor="image">
           <h5>Image:</h5>
           <input type="file" id="image" {...register('image')} />
-          {errors.image && <p>{errors.image.message}</p>}
+          <div className="error">
+            {errors.image && <p>{errors.image.message}</p>}
+          </div>
         </label>
 
-        <input type="submit" />
+        <input type="submit" disabled={Object.keys(errors).length !== 0} />
       </form>
     </>
   );
