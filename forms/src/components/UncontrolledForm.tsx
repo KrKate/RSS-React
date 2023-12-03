@@ -1,47 +1,39 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as yup from 'yup';
-const schema = yup.object().shape({
-  name: yup.string().required(),
-  age: yup.number().required(),
-  email: yup.string().email().required(),
-  password1: yup
-    .string()
-    .required()
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      'Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character'
-    ),
-});
+import { schema } from '../yup/schema';
 
 const UncontrolledForm = () => {
   const nameRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const password1Ref = useRef<HTMLInputElement>(null);
+  const password2Ref = useRef<HTMLInputElement>(null);
+  const genderRef = useRef<HTMLSelectElement>(null);
+  const [, setErrors] = useState<string[]>([]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const name = nameRef.current?.value;
     const age = ageRef.current?.value;
     const email = emailRef.current?.value;
     const password1 = password1Ref.current?.value;
+    const password2 = password1Ref.current?.value;
+    const gender = genderRef.current?.value;
 
     schema
-      .validate({ name, age, email, password1 })
+      .validate({ name, age, email, password1, password2, gender })
       .then(() => {
-        console.log('Form is valid');
+        setErrors([]);
       })
-      .catch((err) => {
-        console.log(err.errors);
+      .catch((err: { errors: string[] }) => {
+        setErrors(err.errors);
       });
   };
 
   return (
     <>
       <Link to="/">Main</Link>
-      <h2>React Hook Form</h2>
+      <h2>Uncontrolled form</h2>
       <form onSubmit={handleSubmit}>
         <label>
           <h5>Name:</h5>
@@ -59,6 +51,26 @@ const UncontrolledForm = () => {
         <label>
           <h5>Password:</h5>
           <input type="password" ref={password1Ref} required />
+        </label>
+
+        <label>
+          <h5>Confirm Password:</h5>
+          <input type="password" ref={password2Ref} required />
+        </label>
+
+        <label htmlFor="gender">
+          <h5>Gender:</h5>
+          <select id="gender" ref={genderRef} required>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+
+        <label htmlFor="terms" className="terms">
+          <input type="checkbox" id="terms" required />
+          <div className="accept">Accept Terms and Conditions</div>
         </label>
 
         <input type="submit"></input>

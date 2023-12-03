@@ -7,7 +7,7 @@ export type FormData = {
   gender: string;
   terms?: boolean;
   image?: FileList;
-  country: string;
+  country?: string;
 };
 
 export type country = {

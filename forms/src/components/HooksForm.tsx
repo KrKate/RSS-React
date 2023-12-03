@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormData, country } from '../types';
 import { schema } from '../yup/schema';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFormData } from '../toolkitRedux/store';
 
 export const HooksForm = () => {
   const {
@@ -21,15 +22,21 @@ export const HooksForm = () => {
   const [enteredCountry, setEnteredCountry] = useState('');
   const [isCountryFocused, setIsCountryFocused] = useState(false);
   const [, setSelectedCountry] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+  const dispatch = useDispatch();
 
   const onSubmit = (data: FormData) => {
+    const formData = { ...data, image: imagePreview };
     console.log(JSON.stringify(data));
+    dispatch(setFormData(formData));
     setSubmitted(true);
   };
 
-  const redirectToMain = () => {
-    navigate('/');
-  };
+  useEffect(() => {
+    if (submitted) {
+      navigate('/');
+    }
+  }, [submitted, navigate]);
 
   const countries = useSelector((state: { countries: [] }) => state.countries);
 
@@ -41,9 +48,22 @@ export const HooksForm = () => {
     setEnteredCountry(countryName);
     setIsCountryFocused(false);
   };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+  };
   return (
     <>
-      {submitted && redirectToMain()}
       <Link to="/">Main</Link>
       <h2>React Hook Form</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -112,7 +132,12 @@ export const HooksForm = () => {
 
         <label htmlFor="image">
           <h5>Image:</h5>
-          <input type="file" id="image" {...register('image')} />
+          <input
+            type="file"
+            id="image"
+            {...register('image')}
+            onChange={handleImageChange}
+          />
           <div className="error">
             {errors.image && <p>{errors.image.message}</p>}
           </div>
@@ -123,7 +148,7 @@ export const HooksForm = () => {
           <input
             type="text"
             id="country"
-            {...register('country')}
+            // {...register('country')}
             value={enteredCountry}
             onChange={(e) => setEnteredCountry(e.target.value)}
             onFocus={() => setIsCountryFocused(true)}
@@ -144,9 +169,6 @@ export const HooksForm = () => {
             ))}
           </ul>
         </label>
-        {/* {!isCountryFocused && (
-            <div className="error">{errors.country && <p>{errors.country.message}</p>}</div>
-          )} */}
         <input type="submit" disabled={!isValid || !isDirty} />
       </form>
     </>

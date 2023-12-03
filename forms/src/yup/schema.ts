@@ -8,12 +8,18 @@ export const schema = yup
       .required()
       .matches(/^[A-ZА-Я]/, 'First letter should be uppercase'),
     age: yup.number().required().positive().integer(),
-    email: yup.string().required().email(),
+    email: yup
+      .string()
+      .required()
+      .email()
+      .matches(
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      ),
     gender: yup.string().required(),
-    country: yup.string().required(),
     password1: yup
       .string()
       .required()
+      .min(5, 'Weak password')
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         'Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character'

@@ -1,4 +1,10 @@
 import { Link } from 'react-router-dom';
+// import { FormData } from '../types';
+// interface RootState {
+//   form: {
+//     hookData: FormData;
+//   };
+// }
 
 const Main = () => {
   return (
