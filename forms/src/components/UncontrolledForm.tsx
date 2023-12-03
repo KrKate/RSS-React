@@ -9,6 +9,10 @@ const UncontrolledForm = () => {
   const password1Ref = useRef<HTMLInputElement>(null);
   const password2Ref = useRef<HTMLInputElement>(null);
   const genderRef = useRef<HTMLSelectElement>(null);
+  const termRef = useRef<HTMLSelectElement>(null);
+  const imageRef = useRef<HTMLSelectElement>(null);
+  const countryRef = useRef<HTMLSelectElement>(null);
+  const acceptRef = useRef<HTMLSelectElement>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -19,6 +23,10 @@ const UncontrolledForm = () => {
     const password1 = password1Ref.current?.value;
     const password2 = password2Ref.current?.value;
     const gender = genderRef.current?.value;
+    const term = termRef.current?.value;
+    const image = imageRef.current?.value;
+    const country = countryRef.current?.value;
+    const accept = acceptRef.current?.value;
 
     try {
       await schema.validate(
@@ -29,6 +37,10 @@ const UncontrolledForm = () => {
           password1,
           password2,
           gender,
+          term,
+          accept,
+          image,
+          country,
         },
         { abortEarly: false }
       );
@@ -107,6 +119,22 @@ const UncontrolledForm = () => {
         </label>
         <div className="error">
           {errors.terms && <p className="error">{errors.terms}</p>}
+        </div>
+
+        <label htmlFor="image">
+          <h5>Image:</h5>
+          <input type="file" id="image" />
+        </label>
+        <div className="error">
+          {errors.image && <p className="error">{errors.image}</p>}
+        </div>
+
+        <label htmlFor="country">
+          <h5>Country:</h5>
+          <input type="text" id="country" />
+        </label>
+        <div className="error">
+          {errors.country && <p className="error">{errors.country}</p>}
         </div>
 
         <input type="submit"></input>
