@@ -68,7 +68,7 @@ export const HooksForm = () => {
       <h2>React Hook Form</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="name">
-          <h5>First Name:</h5>
+          <h5>Name:</h5>
           <input type="text" id="name" {...register('name')} />
         </label>
         <div className="error">
