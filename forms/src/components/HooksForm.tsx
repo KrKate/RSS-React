@@ -1,51 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import * as yup from 'yup';
+import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormData } from '../types';
-
-export const schema = yup
-  .object()
-  .shape({
-    name: yup
-      .string()
-      .required()
-      .matches(/^[A-Z]/, 'First letter should be uppercase'),
-    age: yup.number().required().positive().integer(),
-    email: yup.string().required().email(),
-    gender: yup.string().required(),
-    password1: yup
-      .string()
-      .required()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        'Password must contain at least 8 characters, one uppercase, one lowercase, one number, and one special character'
-      ),
-    password2: yup
-      .string()
-      .required()
-      .oneOf([yup.ref('password1')], 'Passwords must match'),
-    terms: yup
-      .boolean()
-      .oneOf([true], 'You must accept the terms and conditions'),
-    image: yup
-      .mixed<FileList>()
-      .test('fileSize', 'Only documents up to 2MB are permitted.', (value) => {
-        return value && value[0] && value[0].size <= 2000000;
-      })
-      .test(
-        'type',
-        'Only the following formats are accepted: .png, .jpeg',
-        (value) => {
-          return (
-            value &&
-            value[0] &&
-            (value[0].type === 'image/jpeg' || value[0].type === 'image/png')
-          );
-        }
-      ),
-  })
-  .required();
+import { FormData, country } from '../types';
+import { schema } from '../yup/schema';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export const HooksForm = () => {
   const {
@@ -57,12 +16,34 @@ export const HooksForm = () => {
     resolver: yupResolver(schema),
   });
 
+  const navigate = useNavigate();
+  const [submitted, setSubmitted] = useState(false);
+  const [enteredCountry, setEnteredCountry] = useState('');
+  const [isCountryFocused, setIsCountryFocused] = useState(false);
+  const [, setSelectedCountry] = useState('');
+
   const onSubmit = (data: FormData) => {
     console.log(JSON.stringify(data));
+    setSubmitted(true);
   };
 
+  const redirectToMain = () => {
+    navigate('/');
+  };
+
+  const countries = useSelector((state: { countries: [] }) => state.countries);
+
+  const filteredCountries = countries.filter((country: country) =>
+    country.name.toLowerCase().includes(enteredCountry.toLowerCase())
+  );
+  const handleCountryClick = (countryName: string) => {
+    setSelectedCountry(countryName);
+    setEnteredCountry(countryName);
+    setIsCountryFocused(false);
+  };
   return (
     <>
+      {submitted && redirectToMain()}
       <Link to="/">Main</Link>
       <h2>React Hook Form</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -137,10 +118,37 @@ export const HooksForm = () => {
           </div>
         </label>
 
+        <label htmlFor="country">
+          <h5>Country:</h5>
+          <input
+            type="text"
+            id="country"
+            {...register('country')}
+            value={enteredCountry}
+            onChange={(e) => setEnteredCountry(e.target.value)}
+            onFocus={() => setIsCountryFocused(true)}
+            onBlur={() => {
+              setTimeout(() => {
+                setIsCountryFocused(false);
+              }, 300);
+            }}
+          />
+          <ul className={isCountryFocused ? '' : 'hidden'}>
+            {filteredCountries.map((country: country) => (
+              <li
+                key={country.code}
+                onClick={() => handleCountryClick(country.name)}
+              >
+                <span>{country.name}</span>
+              </li>
+            ))}
+          </ul>
+        </label>
+        {/* {!isCountryFocused && (
+            <div className="error">{errors.country && <p>{errors.country.message}</p>}</div>
+          )} */}
         <input type="submit" disabled={!isValid || !isDirty} />
       </form>
     </>
   );
 };
-
-export default HooksForm;

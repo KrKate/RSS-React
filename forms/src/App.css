@@ -170,12 +170,11 @@ h5 {
   width: 500px;
 }
 
-
 form {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  align-content: center;
+  align-content: flex-start;
   align-items: center;
 }
 
@@ -185,4 +184,17 @@ form {
 
 input#terms {
   width: 1.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+ul {
+  background-color: aliceblue;
+  color: black;
+  font-size: 1rem;
+  position: relative;
+  z-index: 10;
+  top: -1.3rem;
 }
